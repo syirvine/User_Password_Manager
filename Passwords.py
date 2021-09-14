@@ -51,7 +51,7 @@ def createPassword():
     points = 0
     specialChar = ["!", "£", "$", "%", "&", "<", "*", "@"]
 
-    passwordCreate = str(input("Please enter a password for this user:"))
+    passwordCreate = str(input("Please enter a new password for this user:"))
 
     if len(passwordCreate) >= 8:  # 1 point for 8 characters or longer
         points += 1
@@ -118,23 +118,27 @@ def changePassword():
         currentPassword = input("Please enter your current password: ")
         currentPassword = hashPassword(currentPassword)
 
-        newPassword = createPassword()
-        tmp = []
-
         # Updates list to include passwords
+        tmp = []
         for row in file:
             tmp.append(row)
+
         # Changes the password for the user (based on index above)
-        tmp[index][1] = newPassword
-        # Writers the updated list with new password back to csv
-        file = open("Users.csv", "w")
-        x = 0
-        for row in tmp:
-            newRec = tmp[x][0] + "," + tmp[x][1] + "\n"
-            file.write(newRec)
-            x += 1
-        file.close()
-        print("Password successfully changed")
+        if currentPassword == tmp[index][1]:
+            newPassword = createPassword()
+            newPassword = hashPassword(newPassword)
+            tmp[index][1] = newPassword
+            # Writers the updated list with new password back to csv
+            file = open("Users.csv", "w")
+            x = 0
+            for row in tmp:
+                newRec = tmp[x][0] + "," + tmp[x][1] + "\n"
+                file.write(newRec)
+                x += 1
+            file.close()
+            print("Password successfully changed")
+        else:
+            print("Passwords do not match")
     else:
         print("User does not exist")
 
